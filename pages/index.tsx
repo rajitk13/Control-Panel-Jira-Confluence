@@ -1,9 +1,6 @@
-import { Button, Group } from "@mantine/core";
+import HomePage from "../Components/HomePage/HomePage";
+import Layout from "./Layout";
 
 export default function IndexPage() {
-  return (
-    <Group mt={50} justify="center">
-      <Button size="xl">Welcome to Mantine!</Button>
-    </Group>
-  );
+    return <HomePage />;
 }

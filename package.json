@@ -2,22 +2,36 @@
   "name": "mantine-minimal-next-template",
   "version": "0.1.0",
   "private": true,
+  "main": "electron/main.js",
   "scripts": {
+    "lint": "next lint",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "electron": "npm run build && npx electronmon ."
   },
   "dependencies": {
     "@mantine/core": "7.17.1",
+    "@mantine/form": "^7.17.1",
     "@mantine/hooks": "7.17.1",
+    "@mantinex/dev-icons": "^1.1.0",
+    "@mantinex/mantine-logo": "^1.1.0",
+    "@tabler/icons-react": "^3.30.0",
+    "@types/electron-store": "^3.2.2",
+    "@types/lowdb": "^1.0.15",
+    "context-api": "^0.0.2",
+    "electron": "^34.3.0",
+    "electron-store": "^9.0.0",
+    "fs": "^0.0.1-security",
+    "lowdb": "^1.0.0",
     "next": "15.1.5",
     "react": "19.0.0",
-    "react-dom": "19.0.0"
+    "react-dom": "19.0.0",
+    "secure-electron-store": "^4.0.3"
   },
   "devDependencies": {
-    "@types/node": "22.10.7",
-    "@types/react": "19.0.7",
+    "@types/node": "^22.10.7",
+    "@types/react": "^19.0.10",
     "@types/react-dom": "19.0.3",
     "eslint": "9.18.0",
     "eslint-config-next": "15.1.5",
@@ -25,6 +39,11 @@
     "postcss-preset-mantine": "1.17.0",
     "postcss-simple-vars": "^7.0.1",
     "typescript": "5.7.3"
+  },
+  "browser": {
+    "fs": false,
+    "path": false,
+    "os": false
   },
   "packageManager": "yarn@4.6.0"
 }
