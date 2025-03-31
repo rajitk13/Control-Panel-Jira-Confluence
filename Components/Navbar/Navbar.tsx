@@ -24,8 +24,8 @@ type contextType = {
 
 const data = [
     { link: "/", label: "Home", icon: IconHome },
-    { link: "/login", label: "Billing", icon: IconReceipt2 },
-    { link: "", label: "Security", icon: IconFingerprint },
+    { link: "/groupmanager", label: "Group Manager", icon: IconReceipt2 },
+    { link: "/yourtickets", label: "Your Tickets", icon: IconFingerprint },
     { link: "", label: "SSH Keys", icon: IconKey },
     { link: "", label: "Databases", icon: IconDatabaseImport },
     { link: "/config", label: "Config File", icon: IconJson },

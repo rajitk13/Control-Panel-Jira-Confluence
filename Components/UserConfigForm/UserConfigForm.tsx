@@ -2,13 +2,7 @@ import { useState, useEffect } from "react";
 import { Stepper, Button, Group, TextInput, PasswordInput, Code } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
-import {
-    readConfigRequest,
-    readConfigResponse,
-    writeConfigRequest,
-    deleteConfigResponse,
-    deleteConfigRequest,
-} from "secure-electron-store";
+import { readConfigRequest, readConfigResponse, writeConfigRequest } from "secure-electron-store";
 
 declare global {
     interface Window {
@@ -19,24 +13,7 @@ declare global {
 export default function UserConfigForm() {
     const [active, setActive] = useState(0);
     const [visible, { toggle }] = useDisclosure(false);
-    useEffect(() => {
-        window.api.store.onReceive(deleteConfigResponse, function (args: any) {
-            if (args.success) {
-                console.log("File deleted");
-            }
-        });
-        window.api.store.send(deleteConfigRequest);
-        // window.api.store.clearRendererBindings();
-        // window.api.store.send(writeConfigRequest, "myvalue", "25");
-        console.log("effect hit");
-        window.api.store.send(readConfigRequest, "data");
-        window.api.store.onReceive(readConfigResponse, function (args: any) {
-            if (args.success) {
-                // Do something with the value from file
-                console.log(`Received '${args.key}:${args.value}' from file.`);
-            }
-        });
-    });
+
     const form = useForm({
         mode: "uncontrolled",
         initialValues: {
@@ -78,6 +55,25 @@ export default function UserConfigForm() {
         },
     });
 
+    useEffect(() => {
+        window.api.store.clearRendererBindings();
+
+        window.api.store.send(readConfigRequest, "data");
+        window.api.store.onReceive(readConfigResponse, function (args: any) {
+            if (args.success && args.value) {
+                // Do something with the value from file
+                form.setValues(args.value);
+                setActive(3);
+            }
+        });
+    }, [form]);
+
+    const clearStore = () => {
+        window.api.store.clearRendererBindings();
+        window.api.store.send(writeConfigRequest, "data", null);
+        form.reset();
+        setActive(0);
+    };
     const nextStep = () => {
         setActive((current) => {
             if (form.validate().hasErrors) {
@@ -144,12 +140,13 @@ export default function UserConfigForm() {
             </Stepper>
 
             <Group justify="flex-end" mt="sm" mr={"5%"}>
-                {active !== 0 && (
-                    <Button variant="default" onClick={prevStep}>
-                        Back
+                {active !== 0 && <Button onClick={prevStep}>Back</Button>}
+                {active !== 3 && <Button onClick={nextStep}>Next step</Button>}
+                {active == 3 && (
+                    <Button onClick={clearStore} variant="default">
+                        Clear
                     </Button>
                 )}
-                {active !== 3 && <Button onClick={nextStep}>Next step</Button>}
             </Group>
         </>
     );
