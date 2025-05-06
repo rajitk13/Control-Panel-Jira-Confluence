@@ -1,13 +1,16 @@
-import { Button, Container, Group, Text } from "@mantine/core";
+import { Button, Container, Group, Text, Anchor } from "@mantine/core";
 import { GithubIcon } from "@mantinex/dev-icons";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 
 import classes from "./HomePage.module.css";
 import Link from "next/link";
-import { ActiveContext } from "../../context/GlobalContext";
+import { GlobalContext } from "../../context/GlobalContext";
 
 function HomePage() {
-    const { active, setActive } = useContext(ActiveContext);
+    const { active, setActiveTab, formValues } = useContext(GlobalContext);
+    useEffect(() => {
+        console.log(formValues);
+    }, []);
     return (
         <div className={classes.wrapper}>
             <Container size={700} className={classes.inner} mt={"-8%"}>
@@ -29,12 +32,12 @@ function HomePage() {
                         size="xl"
                         className={classes.control}
                         variant="gradient"
+                        component="a"
+                        href="/config"
                         gradient={{ from: "blue", to: "cyan" }}
+                        onClick={() => setActiveTab({ value: "Config File" })}
                     >
-                        <Link href={"/config"} onClick={() => setActive({ value: "Config File" })}>
-                            {" "}
-                            Build Config
-                        </Link>
+                        Build Config
                     </Button>
 
                     <Button

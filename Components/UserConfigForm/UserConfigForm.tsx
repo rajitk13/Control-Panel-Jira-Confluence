@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Stepper, Button, Group, TextInput, PasswordInput, Code } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
 import { readConfigRequest, readConfigResponse, writeConfigRequest } from "secure-electron-store";
+import { GlobalContext } from "../../context/GlobalContext";
 
 declare global {
     interface Window {
@@ -11,6 +12,8 @@ declare global {
 }
 
 export default function UserConfigForm() {
+    const { formValues, setFormValues, setActiveTab } = useContext(GlobalContext);
+
     const [active, setActive] = useState(0);
     const [visible, { toggle }] = useDisclosure(false);
 
@@ -56,22 +59,39 @@ export default function UserConfigForm() {
     });
 
     useEffect(() => {
+        // set the active tab once , and set active form stepper to the end
+        setActiveTab({ value: "Config File" });
+        setActive(3);
+    }, []);
+
+    useEffect(() => {
         window.api.store.clearRendererBindings();
 
         window.api.store.send(readConfigRequest, "data");
         window.api.store.onReceive(readConfigResponse, function (args: any) {
             if (args.success && args.value) {
                 // Do something with the value from file
+                console.log(formValues);
                 form.setValues(args.value);
-                setActive(3);
+                setFormValues(args.value);
+
+                console.log("change");
+                console.log(formValues);
             }
         });
-    }, [form]);
+    }, [active]);
 
     const clearStore = () => {
         window.api.store.clearRendererBindings();
         window.api.store.send(writeConfigRequest, "data", null);
         form.reset();
+        setFormValues({
+            name: "",
+            jira_token: "",
+            conf_token: "",
+            password: "",
+            confirm_password: "",
+        });
         setActive(0);
     };
     const nextStep = () => {

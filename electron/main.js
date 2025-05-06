@@ -17,6 +17,7 @@ function createMainWindow() {
             enableRemoteModule: true,
             additionalArguments: [`--storePath=${store.sanitizePath(app.getPath("userData"))}`],
             nodeIntegrationInWorker: true,
+            webSecurity: false,
         },
     });
     const dev = process.env.NODE_ENV !== "production";

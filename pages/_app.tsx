@@ -3,11 +3,11 @@ import Head from "next/head";
 import { MantineProvider } from "@mantine/core";
 import { theme } from "../theme";
 import Layout from "./Layout";
-import ActiveProvider from "../context/GlobalContext";
+import GlobalProvider from "../context/GlobalContext";
 
 export default function App({ Component, pageProps }: any) {
     return (
-        <ActiveProvider>
+        <GlobalProvider>
             <MantineProvider theme={theme}>
                 <Head>
                     <title>Mantine Template</title>
@@ -24,6 +24,6 @@ export default function App({ Component, pageProps }: any) {
                     </main>
                 </Layout>
             </MantineProvider>
-        </ActiveProvider>
+        </GlobalProvider>
     );
 }

@@ -1,6 +1,6 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import Link from "next/link";
-import { ActiveContext } from "../../context/GlobalContext";
+import { GlobalContext } from "../../context/GlobalContext";
 import {
     Icon2fa,
     IconBellRinging,
@@ -33,7 +33,8 @@ const data = [
 ];
 
 export default function Navbar({ Component }: any) {
-    const { active, setActive } = useContext(ActiveContext);
+    const { active, setActiveTab } = useContext(GlobalContext);
+
     const links = data.map((item) => (
         <Link
             className={classes.link}
@@ -41,8 +42,8 @@ export default function Navbar({ Component }: any) {
             href={item.link}
             key={item.label}
             onClick={(event) => {
-                setActive({ value: item.label });
-                console.log(active.value);
+                localStorage.setItem("active", item.label);
+                setActiveTab({ value: item.label });
             }}
         >
             <item.icon className={classes.linkIcon} stroke={1.5} />
