@@ -1,4 +1,4 @@
-import UserConfigForm from "../Components/UserConfigForm/UserConfigForm";
+import UserConfigForm from "../components/UserConfigForm/UserConfigForm";
 
 const config = () => {
     return <UserConfigForm />;

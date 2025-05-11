@@ -21,7 +21,9 @@ export default function UserConfigForm() {
         mode: "uncontrolled",
         initialValues: {
             name: "",
+            jira_url: "",
             jira_token: "",
+            conf_url: "",
             conf_token: "",
             password: "",
             confirm_password: "",
@@ -36,9 +38,16 @@ export default function UserConfigForm() {
 
             if (active === 1) {
                 return {
-                    name: values.name.trim().length < 2 ? "Name must include at least 2 characters" : null,
                     jira_token: values.jira_token.trim().length < 1 ? "Token must include at least 1 characters" : null,
                     conf_token: values.conf_token.trim().length < 1 ? "Token must include at least 1 characters" : null,
+                    jira_url:
+                        values.jira_url.trim().length < 1
+                            ? "Invalid URL. Please enter a valid Jira website URL."
+                            : null,
+                    conf_url:
+                        values.conf_url.trim().length < 1
+                            ? "Invalid URL. Please enter a valid Jira website URL."
+                            : null,
                 };
             }
 
@@ -65,8 +74,6 @@ export default function UserConfigForm() {
     }, []);
 
     useEffect(() => {
-        window.api.store.clearRendererBindings();
-
         window.api.store.send(readConfigRequest, "data");
         window.api.store.onReceive(readConfigResponse, function (args: any) {
             if (args.success && args.value) {
@@ -82,12 +89,13 @@ export default function UserConfigForm() {
     }, [active]);
 
     const clearStore = () => {
-        window.api.store.clearRendererBindings();
         window.api.store.send(writeConfigRequest, "data", null);
         form.reset();
         setFormValues({
             name: "",
+            jira_url: "",
             jira_token: "",
+            conf_url: "",
             conf_token: "",
             password: "",
             confirm_password: "",
@@ -121,10 +129,24 @@ export default function UserConfigForm() {
                     {/* <TextInput label="Name" placeholder="Name" key={form.key("name")} {...form.getInputProps("name")} /> */}
                     <TextInput
                         mt="md"
+                        label="JIRA URL"
+                        placeholder="JIRA Endpoint URL"
+                        key={form.key("jira_url")}
+                        {...form.getInputProps("jira_url")}
+                    />
+                    <TextInput
+                        mt="md"
                         label="JIRA Token"
-                        placeholder="<token>"
+                        placeholder="URL Endpoint"
                         key={form.key("jira_token")}
                         {...form.getInputProps("jira_token")}
+                    />
+                    <TextInput
+                        mt="md"
+                        label="Confluence Token"
+                        placeholder="Confluence URL Endpoint"
+                        key={form.key("conf_url")}
+                        {...form.getInputProps("conf_url")}
                     />
                     <TextInput
                         mt="md"

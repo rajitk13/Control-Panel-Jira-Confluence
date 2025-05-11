@@ -3,11 +3,10 @@ import { GithubIcon } from "@mantinex/dev-icons";
 import { useContext, useEffect } from "react";
 
 import classes from "./HomePage.module.css";
-import Link from "next/link";
 import { GlobalContext } from "../../context/GlobalContext";
 
 function HomePage() {
-    const { active, setActiveTab, formValues } = useContext(GlobalContext);
+    const { setActiveTab, formValues } = useContext(GlobalContext);
     useEffect(() => {
         console.log(formValues);
     }, []);

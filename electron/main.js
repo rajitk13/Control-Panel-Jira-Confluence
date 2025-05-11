@@ -3,14 +3,14 @@ const path = require("path");
 let mainWindow;
 const Store = require("secure-electron-store").default;
 const fs = require("fs");
-
+const store = new Store({
+    path: app.getPath("userData"),
+});
 function createMainWindow() {
-    const store = new Store({
-        path: app.getPath("userData"),
-    });
     mainWindow = new BrowserWindow({
-        width: 800,
-        height: 600,
+        width: 1024,
+        height: 800,
+        icon: path.join(__dirname, "CubeIcon.png"),
         webPreferences: {
             preload: path.join(__dirname, "preload.js"),
             nodeIntegration: true,
@@ -35,6 +35,8 @@ app.on("ready", createMainWindow);
 app.on("window-all-closed", () => {
     if (process.platform !== "darwin") {
         app.quit();
+    } else {
+        store.clearMainBindings(ipcMain);
     }
 });
 app.on("activate", () => {

@@ -4,7 +4,7 @@ import { AppShell, Burger, Skeleton, Switch, Flex } from "@mantine/core";
 import { MantineLogo } from "@mantinex/mantine-logo";
 import { IconCube } from "@tabler/icons-react";
 import { useDisclosure } from "@mantine/hooks";
-import Navbar from "../Components/Navbar/Navbar";
+import Navbar from "../Navbar/Navbar";
 
 export default function Layout({ children }: any) {
     const [opened, { toggle }] = useDisclosure();
