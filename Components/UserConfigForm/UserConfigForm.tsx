@@ -86,7 +86,7 @@ export default function UserConfigForm() {
                 console.log(formValues);
             }
         });
-    }, [active]);
+    }, [active==3]);
 
     const clearStore = () => {
         window.api.store.send(writeConfigRequest, "data", null);

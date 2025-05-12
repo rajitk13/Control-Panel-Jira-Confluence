@@ -1,13 +1,16 @@
 import { useContext, useEffect, useState } from "react";
-import { Button, TextInput, Grid, Paper, Text, Title, Group, List, Transition, Switch } from "@mantine/core";
+import { Button, TextInput, Grid, Paper, Text, Title, Group, List, Transition, Switch, Drawer } from "@mantine/core";
 import { useForm } from "@mantine/form";
+import { useDisclosure } from "@mantine/hooks";
 import { GlobalContext } from "../context/GlobalContext";
+import { getJiraGroups, getConfluenceGroups } from "../utilities/getRequests";
 
 function GroupManager() {
     const { setActiveTab, formValues } = useContext(GlobalContext);
     useEffect(() => {
         setActiveTab({ value: "Group Manager" });
         console.log(formValues);
+        console.log(formValues.conf_token);
     }, []);
     const [checked, setChecked] = useState(false);
     const [userGroups, setUserGroups] = useState<any[]>([]);
@@ -28,85 +31,36 @@ function GroupManager() {
         },
     });
 
-    const getJiraGroups = async (value: any, isCopy: boolean) => {
-        console.log(value);
-
-        await fetch(
-            `<jira-link>=${
-                isCopy ? value.copyusername : value.username
-            }&expand=groups`,
-            {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: "Bearer <token>",
-                },
-                redirect: "follow",
-            }
-        )
-            .then((res) => {
-                return res.json();
-            })
-            .then((data) => {
-                console.log(data);
-                if (data?.groups?.size > 0) {
-                    !isCopy ? setUserGroups(data.groups.items) : setUserCopyGroups(data.groups.items);
-                } else {
-                    setUserGroups([]);
-                    setUserCopyGroups([]);
-                }
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-    };
-
-    const getConfluenceGroups = async (value: any, isCopy: boolean) => {
-        console.log(value);
-
-        try {
-            const response = await fetch(
-                `<confluence-link>=${
-                    isCopy ? value.copyusername : value.username
-                }`,
-                {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: "Bearer <token>", // Replace <pat> with your actual Personal Access Token
-                    },
-                    redirect: "follow",
-                }
-            );
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-
-            const data = await response.json();
-            console.log(data);
-
-            if (data?.results?.length > 0) {
-                !isCopy ? setUserConfGroups(data.results) : setUserCopyConfGroups(data.results);
-            } else {
-                setUserConfGroups([]);
-                setUserCopyConfGroups([]);
-            }
-        } catch (error) {
-            console.error("Error fetching Confluence groups:", error);
-        }
-    };
+    const [opened, { open, close }] = useDisclosure(false);
 
     return (
         <>
+            <Drawer opened={opened} onClose={close} title="Project - Users and Roles" position="right">
+                {/* Drawer content */}
+            </Drawer>
+
             <Title order={2} mb={10}>
                 Group Manager
             </Title>
 
             <form
                 onSubmit={form.onSubmit((values) => {
-                    getJiraGroups(values, false);
-                    getConfluenceGroups(values, false);
+                    getJiraGroups(
+                        formValues.jira_url,
+                        values,
+                        false,
+                        setUserGroups,
+                        setUserCopyGroups,
+                        formValues.jira_token
+                    );
+                    getConfluenceGroups(
+                        formValues.conf_url,
+                        values,
+                        false,
+                        setUserConfGroups,
+                        setUserCopyConfGroups,
+                        formValues.conf_token
+                    );
                 })}
             >
                 <TextInput
@@ -166,8 +120,22 @@ function GroupManager() {
                     <div style={styles}>
                         <form
                             onSubmit={form.onSubmit((values) => {
-                                getJiraGroups(values, true);
-                                getConfluenceGroups(values, true);
+                                getJiraGroups(
+                                    formValues.jira_url,
+                                    values,
+                                    true,
+                                    setUserGroups,
+                                    setUserCopyGroups,
+                                    formValues.jira_token
+                                );
+                                getConfluenceGroups(
+                                    formValues.conf_url,
+                                    values,
+                                    true,
+                                    setUserConfGroups,
+                                    setUserCopyConfGroups,
+                                    formValues.conf_token
+                                );
                             })}
                         >
                             <TextInput
@@ -225,6 +193,9 @@ function GroupManager() {
                     </div>
                 )}
             </Transition>
+            <Button variant="default" onClick={open} mt={20}>
+                Check Project - Users and Roles
+            </Button>
         </>
     );
 }

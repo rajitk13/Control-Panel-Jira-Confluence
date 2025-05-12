@@ -15,6 +15,6 @@
     "jsx": "preserve",
     "incremental": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "store.js", "context/GlobalContext.js", "electron/main.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "store.js", "context/GlobalContext.js", "electron/main.js", "utilities/getRequests.js"],
   "exclude": ["node_modules"]
 }
