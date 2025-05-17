@@ -77,16 +77,11 @@ export default function UserConfigForm() {
         window.api.store.send(readConfigRequest, "data");
         window.api.store.onReceive(readConfigResponse, function (args: any) {
             if (args.success && args.value) {
-                // Do something with the value from file
-                console.log(formValues);
                 form.setValues(args.value);
                 setFormValues(args.value);
-
-                console.log("change");
-                console.log(formValues);
             }
         });
-    }, [active==3]);
+    }, [active == 3]);
 
     const clearStore = () => {
         window.api.store.send(writeConfigRequest, "data", null);

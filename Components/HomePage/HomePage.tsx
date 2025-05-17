@@ -4,26 +4,36 @@ import { useContext, useEffect } from "react";
 
 import classes from "./HomePage.module.css";
 import { GlobalContext } from "../../context/GlobalContext";
+import getRandomGradient from "../../utilities/getRandomGradient";
 
 function HomePage() {
     const { setActiveTab, formValues } = useContext(GlobalContext);
-    useEffect(() => {
-        console.log(formValues);
-    }, []);
+    const gradient = getRandomGradient();
+
     return (
         <div className={classes.wrapper}>
             <Container size={700} className={classes.inner} mt={"-8%"}>
-                <h1 className={classes.title}>
-                    A Simplified Control Pane for{" "}
-                    <Text component="span" variant="gradient" gradient={{ from: "blue", to: "cyan" }} inherit>
-                        JIRA & Confluence
-                    </Text>{" "}
-                    for managing your atlassian needs!
-                </h1>
+                <div className={classes.title}>
+                    <div>
+                        {formValues.name && (
+                            <Text component="span" variant="gradient" gradient={gradient} inherit>
+                                Hi {formValues.name},
+                            </Text>
+                        )}
+                    </div>
+                    Welcome to Control Panel !
+                    <div>
+                        <Text component="span" variant="gradient" gradient={{ from: "blue", to: "cyan" }} inherit>
+                            JIRA & Confluence
+                        </Text>{" "}
+                        console for managing your administrative needs!
+                    </div>
+                </div>
 
                 <Text className={classes.description} color="dimmed">
-                    Build fully functional accessible web applications with ease – Mantine includes more than 100
-                    customizable components and hooks to cover you in any situation
+                    A central console which makes it easy for Jira & confluence admins to provided access to users,
+                    perform administrative tasks, inject scripts from a store library to console faster than jira,
+                    making worflow easier and faster!
                 </Text>
 
                 <Group className={classes.controls}>
